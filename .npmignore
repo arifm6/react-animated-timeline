@@ -1,0 +1,15 @@
+# Ignore storybook files
+**/*.stories.ts
+**/*.stories.tsx
+
+# Ignore TypeScript source files
+src/
+
+# Ignore TypeScript configuration
+tsconfig.json
+
+# Ignore Storybook configuration
+.storybook/
+
+# Ignore node modules
+node_modules/
