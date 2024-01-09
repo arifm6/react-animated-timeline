@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es5",
     "outDir": "lib",
     "lib": ["dom", "dom.iterable", "esnext"],
     "declaration": true,
@@ -12,12 +12,12 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react"
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "lib", "**/*.stories.ts", "**/*.stories.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "lib"]
 }

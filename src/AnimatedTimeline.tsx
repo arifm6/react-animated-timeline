@@ -1,7 +1,17 @@
 import React from "react";
+import { Milestone } from "./types";
 
-type Props = {};
-
-export default function AnimatedTimeline({}: Props) {
-  return <div>AnimatedTimeline</div>;
+interface AnimatedTimelineProps {
+  milestones: Milestone[];
+}
+export default function AnimatedTimeline({
+  milestones,
+}: AnimatedTimelineProps) {
+  return (
+    <div>
+      {milestones.map((milestone) => {
+        return <div key={milestone.date}>{milestone.title}</div>;
+      })}
+    </div>
+  );
 }
