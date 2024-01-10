@@ -1,3 +1,4 @@
-import AnimatedTimeline from "./AnimatedTimeline";
+import "./styles.css";
+import Timeline from "./Timeline";
 
-export { AnimatedTimeline };
+export { Timeline };

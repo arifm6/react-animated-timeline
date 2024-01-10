@@ -1,12 +1,10 @@
 import React from "react";
 import { Milestone } from "./types";
 
-interface AnimatedTimelineProps {
+interface TimelineProps {
   milestones: Milestone[];
 }
-export default function AnimatedTimeline({
-  milestones,
-}: AnimatedTimelineProps) {
+export default function Timeline({ milestones }: TimelineProps) {
   return (
     <div>
       {milestones.map((milestone) => {

@@ -1,14 +1,14 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import AnimatedTimeline from "./AnimatedTimeline";
+import Timeline from "./Timeline";
 import { Milestone } from "./types";
 
-const meta: Meta<typeof AnimatedTimeline> = {
-  title: "Components/AnimatedTimeline",
-  component: AnimatedTimeline,
+const meta: Meta<typeof Timeline> = {
+  title: "Components/Timeline",
+  component: Timeline,
 };
 
-type Story = StoryObj<typeof AnimatedTimeline>;
+type Story = StoryObj<typeof Timeline>;
 // q: copilot, generate some data of type Milestone[] for us. Include optional fields in some of them
 
 const timelineData: Milestone[] = [
