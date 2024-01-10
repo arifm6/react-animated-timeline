@@ -14,7 +14,7 @@ type Story = StoryObj<typeof TimelineElement>;
 // q: copilot, generate some data of type Milestone[] for us. Include optional fields in some of them
 
 const milestoneData: Milestone = {
-  date: "2021-01-01",
+  date: "March 2018",
   title: "First milestone",
   description: "This is the first milestone",
 };
@@ -22,16 +22,16 @@ const milestoneData: Milestone = {
 export const Primary: Story = {
   args: {
     milestone: milestoneData,
-
     // label: "Primary 😃",
     // size: "large",
     // type: "primary",
   },
 };
 
-export const Secondary: Story = {
+export const Inverted: Story = {
   args: {
     ...Primary.args,
+    inverted: true,
     // type: "secondary",
     // label: "Secondary 😇",
   },
