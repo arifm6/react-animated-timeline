@@ -1,0 +1,26 @@
+.timeline-element-container {
+  display: flex;
+  align-items: center;
+}
+.timeline-track {
+  background-color: #3d5af1;
+  flex-grow: 1;
+  height: 1px;
+  width: 100px;
+}
+.timeline-button-parent {
+  background-color: white;
+  border: 2px solid #22d1ee;
+  border-radius: 100%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.timeline-button-child {
+  background-color: #22d1ee;
+  border-radius: 100%;
+  width: 16px;
+  height: 16px;
+}
