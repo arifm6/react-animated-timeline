@@ -1,4 +1,5 @@
 import "../src/styles.css";
+import "./storybook.css";
 import type { Preview } from "@storybook/react";
 const preview: Preview = {
   parameters: {
@@ -9,7 +10,7 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    layout: "centered",
+    layout: "fullscreen",
   },
 };
 
