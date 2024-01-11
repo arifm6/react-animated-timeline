@@ -1,5 +1,5 @@
 import "./styles.css";
-import Timeline from "./Timeline";
-import TimelineElement from "./TimelineElement";
+import Timeline from "./components/Timeline/Timeline";
+import TimelineElement from "./components/TimelineElement/TimelineElement";
 
 export { Timeline, TimelineElement };
