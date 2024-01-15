@@ -1,7 +1,9 @@
+/** @jsxImportSource @emotion/react */
+
 import "./TimelineElement.css";
 import React from "react";
 import { Milestone } from "../../types";
-
+import { css } from "@emotion/react";
 interface BaseProps {
   milestone: Milestone;
   timelineTrackClassName?: string;
