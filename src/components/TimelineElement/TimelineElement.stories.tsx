@@ -1,5 +1,3 @@
-import "./TimelineElement.css";
-
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import TimelineElement from "./TimelineElement";
@@ -8,6 +6,9 @@ import { Milestone } from "../../types";
 const meta: Meta<typeof TimelineElement> = {
   title: "Components/TimelineElement",
   component: TimelineElement,
+  parameters: {
+    layout: "centered",
+  },
 };
 
 type Story = StoryObj<typeof TimelineElement>;
