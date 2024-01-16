@@ -1,83 +1,117 @@
 /** @jsxImportSource @emotion/react */
-import "./Timeline.css";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Milestone } from "../../types";
 import { TimelineElement } from "../..";
 import { css } from "@emotion/react";
+
 interface ResponsiveBreakpoint {
-  [key: string]: number;
+  minWidth: number;
+  itemsPerView: number;
 }
+
 interface TimelineProps {
   milestones: Milestone[];
-  itemsPerView: number;
-  //q: how do I make the below an array of key value pairs where the value is a number?
-  // a: https://stackoverflow.com/questions/43159887/typescript-array-of-objects-with-key-and-value
-  responsiveBreakpoints?: ResponsiveBreakpoint;
+  itemsPerViewBreakpoints: ResponsiveBreakpoint[];
   width: string;
   height: string;
 }
+
+const styles = {
+  timelineContainer: (width = "100%", height = "100%") => css`
+    display: flex;
+    align-items: center;
+    width: ${width};
+    height: ${height};
+    position: relative;
+    overflow-x: hidden;
+  `,
+  timelineTrack: css`
+    flex-grow: 1;
+    height: 1px;
+    background-color: #3d5af1;
+    position: absolute;
+    left: 0;
+    right: 0;
+  `,
+  timelineElement: (
+    itemsPerViewBreakpoints: ResponsiveBreakpoint[],
+    currentIndex: number
+  ) => css`
+    flex-grow: 1;
+    flex-shrink: 0;
+    transition: transform 0.5s ease-in-out;
+
+    ${itemsPerViewBreakpoints
+      .sort((a, b) => a.minWidth - b.minWidth)
+      .map(
+        ({ minWidth, itemsPerView }) => css`
+          @media (min-width: ${minWidth}px) {
+            flex-basis: ${100 / itemsPerView}%;
+            transform: translateX(-${currentIndex * 100}%);
+          }
+        `
+      )}
+  `,
+  prevButton: css`
+    position: fixed;
+    bottom: 1/3;
+    left: 5%;
+    z-index: 1000;
+  `,
+  nextButton: css`
+    position: fixed;
+    bottom: 1/3;
+    right: 5%;
+  `,
+};
+
 export default function Timeline({
   milestones,
   width,
   height,
-  itemsPerView,
+  itemsPerViewBreakpoints,
 }: TimelineProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const timelineElements = milestones.map((milestone, index) => {
-    return (
-      <div
-        key={milestone.date + milestone.title}
-        style={{
-          flexBasis: `${100 / itemsPerView}%`,
-          flexGrow: 1,
-          flexShrink: 0,
-          transform: `translateX(-${currentIndex * 100}%)`,
-          transition: "transform 0.5s ease-in-out",
-        }}
-      >
-        <TimelineElement milestone={milestone} inverted={index % 2 === 0} />
-        {/* <div className="timeline-track"></div> */}
-      </div>
-    );
-  });
+  const timelineElements = milestones.map((milestone, index) => (
+    <div
+      key={milestone.date + milestone.title}
+      css={styles.timelineElement(itemsPerViewBreakpoints, currentIndex)}
+    >
+      <TimelineElement milestone={milestone} inverted={index % 2 === 1} />
+    </div>
+  ));
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      Math.min(prevIndex + itemsPerView, timelineElements.length - 1)
-    );
+    setCurrentIndex((prevIndex) => {
+      let itemsPerView = 1;
+      if (typeof window !== "undefined") {
+        const windowWidth = window.innerWidth;
+        const breakpoint = itemsPerViewBreakpoints
+          .sort((a, b) => b.minWidth - a.minWidth)
+          .find(({ minWidth }) => windowWidth >= minWidth);
+        if (breakpoint) {
+          itemsPerView = breakpoint.itemsPerView;
+        }
+      }
+      return Math.min(prevIndex + 1, timelineElements.length - itemsPerView);
+    });
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => Math.max(prevIndex - itemsPerView, 0));
+    setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
   return (
-    <div
-      className="timeline-container"
-      style={{
-        width: width,
-        height: height,
-        // transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-        // transition: "transform 0.5s ease-in-out",
-      }}
-    >
-      <button
-        onClick={handlePrev}
-        style={{ position: "fixed", bottom: "1/3", left: "5%", zIndex: 1000 }}
-      >
+    <div css={styles.timelineContainer(width, height)}>
+      <button onClick={handlePrev} css={styles.prevButton}>
         Prev
       </button>
-
-      <div className="timeline-track"></div>
+      <div css={styles.timelineTrack}></div>
       {timelineElements}
-      <button
-        onClick={handleNext}
-        style={{ position: "fixed", bottom: "1/3", right: "5%" }}
-      >
+      <button onClick={handleNext} css={styles.nextButton}>
         Next {currentIndex}
       </button>
-      {/* {currentIndex} */}
     </div>
   );
 }
