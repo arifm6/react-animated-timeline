@@ -1,8 +1,8 @@
-/** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import styles from "./Timeline.module.css";
+import { useEffect, useState } from "react";
 import { Milestone } from "../../types";
 import { TimelineElement } from "../..";
-import { css } from "@emotion/react";
+import React from "react";
 
 interface ResponsiveBreakpoint {
   minWidth: number;
@@ -16,55 +16,6 @@ interface TimelineProps {
   height: string;
 }
 
-const styles = {
-  timelineContainer: (width = "100%", height = "100%") => css`
-    display: flex;
-    align-items: center;
-    width: ${width};
-    height: ${height};
-    position: relative;
-    overflow-x: hidden;
-  `,
-  timelineTrack: css`
-    flex-grow: 1;
-    height: 1px;
-    background-color: #3d5af1;
-    position: absolute;
-    left: 0;
-    right: 0;
-  `,
-  timelineElement: (
-    itemsPerViewBreakpoints: ResponsiveBreakpoint[],
-    currentIndex: number
-  ) => css`
-    flex-grow: 1;
-    flex-shrink: 0;
-    transition: transform 0.5s ease-in-out;
-
-    ${itemsPerViewBreakpoints
-      .sort((a, b) => a.minWidth - b.minWidth)
-      .map(
-        ({ minWidth, itemsPerView }) => css`
-          @media (min-width: ${minWidth}px) {
-            flex-basis: ${100 / itemsPerView}%;
-            transform: translateX(-${currentIndex * 100}%);
-          }
-        `
-      )}
-  `,
-  prevButton: css`
-    position: fixed;
-    bottom: 1/3;
-    left: 5%;
-    z-index: 1000;
-  `,
-  nextButton: css`
-    position: fixed;
-    bottom: 1/3;
-    right: 5%;
-  `,
-};
-
 export default function Timeline({
   milestones,
   width,
@@ -72,11 +23,30 @@ export default function Timeline({
   itemsPerViewBreakpoints,
 }: TimelineProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  // add doc to suppress hydration warning on nextjs or about ssr mismatch
+  const [itemsPerView, setItemsPerView] = useState(() => {
+    if (typeof window !== "undefined") {
+      const sortedBreakpoints = itemsPerViewBreakpoints.sort(
+        (a, b) => b.minWidth - a.minWidth
+      );
+      const matchingBreakpoint = sortedBreakpoints.find(
+        ({ minWidth }) =>
+          window.matchMedia(`(min-width: ${minWidth}px)`).matches
+      );
+      return matchingBreakpoint ? matchingBreakpoint.itemsPerView : 1;
+    } else {
+      // Default value for SSR
+      return 1;
+    }
+  });
   const timelineElements = milestones.map((milestone, index) => (
     <div
       key={milestone.date + milestone.title}
-      css={styles.timelineElement(itemsPerViewBreakpoints, currentIndex)}
+      className={styles.timelineElement}
+      style={{
+        flexBasis: `${100 / itemsPerView}%`,
+        transform: `translateX(-${currentIndex * 100}%)`,
+      }}
     >
       <TimelineElement milestone={milestone} inverted={index % 2 === 1} />
     </div>
@@ -102,14 +72,47 @@ export default function Timeline({
     setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
+  useEffect(() => {
+    const sortedBreakpoints = itemsPerViewBreakpoints.sort(
+      (a, b) => b.minWidth - a.minWidth
+    );
+    const mediaQueryLists = sortedBreakpoints.map(({ minWidth }) =>
+      window.matchMedia(`(min-width: ${minWidth}px)`)
+    );
+
+    const updateItemsPerView = () => {
+      setCurrentIndex(
+        Math.min(currentIndex, timelineElements.length - itemsPerView)
+      );
+
+      for (let i = 0; i < mediaQueryLists.length; i++) {
+        if (mediaQueryLists[i].matches) {
+          setItemsPerView(sortedBreakpoints[i].itemsPerView);
+          break;
+        }
+      }
+    };
+
+    updateItemsPerView();
+    mediaQueryLists.forEach((mql) =>
+      mql.addEventListener("change", updateItemsPerView)
+    );
+
+    return () => {
+      mediaQueryLists.forEach((mql) =>
+        mql.removeEventListener("change", updateItemsPerView)
+      );
+    };
+  }, [itemsPerViewBreakpoints]);
+
   return (
-    <div css={styles.timelineContainer(width, height)}>
-      <button onClick={handlePrev} css={styles.prevButton}>
+    <div className={styles.timelineContainer} style={{ width, height }}>
+      <button onClick={handlePrev} className={styles.prevButton}>
         Prev
       </button>
-      <div css={styles.timelineTrack}></div>
+      <div className={styles.timelineTrack}></div>
       {timelineElements}
-      <button onClick={handleNext} css={styles.nextButton}>
+      <button onClick={handleNext} className={styles.nextButton}>
         Next {currentIndex}
       </button>
     </div>
