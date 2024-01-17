@@ -1,0 +1,33 @@
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.title {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+.description {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: #343434;
+}
+
+@media (min-width: 640px) {
+  .description {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}

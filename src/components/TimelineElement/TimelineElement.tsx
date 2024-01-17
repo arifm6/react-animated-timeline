@@ -1,6 +1,8 @@
 import React from "react";
 import { Milestone } from "../../types";
 import styles from "./TimelineElement.module.css";
+import ButtonIcon from "./ButtonIcon/ButtonIcon";
+import Details from "./Details/Details";
 
 interface BaseProps {
   milestone: Milestone;
@@ -32,26 +34,14 @@ export default function TimelineElement({
   return inverted ? (
     <div className={styles.container}>
       <div className={styles.descriptionSectionInverted}>
-        <div className={styles.details}>
-          <div className={styles.title}>{milestone.title}</div>
-          <div className={styles.description}>{milestone.description}</div>
-        </div>
+        <Details milestone={milestone} />
         <div className={styles.branch}>
           <div className={styles.branchPoint}></div>
           <div className={styles.branchLine}></div>
         </div>
       </div>
 
-      <div>
-        {buttonIcon ? (
-          buttonIcon
-        ) : (
-          <div className={styles.buttonParent}>
-            <div className={styles.buttonChild}></div>
-          </div>
-        )}
-      </div>
-
+      <ButtonIcon />
       <div>
         <div className={styles.dateInverted}>{milestone.date}</div>
       </div>
@@ -61,27 +51,14 @@ export default function TimelineElement({
       <div>
         <div className={styles.date}>{milestone.date}</div>
       </div>
-
-      <div>
-        {buttonIcon ? (
-          buttonIcon
-        ) : (
-          <div className={styles.buttonParent}>
-            <div className={styles.buttonChild}></div>
-          </div>
-        )}
-      </div>
+      <ButtonIcon buttonIcon={buttonIcon} />
       <div className={styles.descriptionSection}>
         <div className={styles.branch}>
           <div className={styles.branchLine}></div>
 
           <div className={styles.branchPoint}></div>
         </div>
-
-        <div className={styles.details}>
-          <div className={styles.title}>{milestone.title}</div>
-          <div className={styles.description}>{milestone.description}</div>
-        </div>
+        <Details milestone={milestone} />
       </div>
     </div>
   );
