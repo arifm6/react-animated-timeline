@@ -1,91 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+// useSequentialAnimation.ts
+import React, { useState, ReactElement } from "react";
 
-interface UseSequntialAnimationProps {
-  autoplay?: boolean;
-  duration?: number;
-  loop?: boolean;
-  onSequenceEnd?: () => void;
-  onAnimationStop?: () => void;
-  children: React.ReactNode[];
+interface UseSequentialAnimationProps {
+  frames: ReactElement[];
 }
-export default function useSequentialAnimation({
-  autoplay = true,
-  duration = 1000,
-  loop = true,
-  onSequenceEnd,
-  onAnimationStop,
-  children,
-}: UseSequntialAnimationProps) {
-  //   const [frame, setFrame] = useState(0);
-  const [currentFrame, setCurrentFrame] = useState(0);
-  const animationStart = useRef<number | null>(null);
-  const animationFrame = useRef<ReturnType<typeof requestAnimationFrame>>();
 
-  const start = () => {
-    playAnimation();
+const useSequentialAnimation = ({ frames }: UseSequentialAnimationProps) => {
+  const [activeFrame, setActiveFrame] = useState(0);
+  const handleAnimationEnd = () => {
+    setActiveFrame((prevFrame) => prevFrame + 1);
   };
-
-  const stop = () => {
-    if (animationFrame.current) {
-      cancelAnimationFrame(animationFrame.current);
-    }
-  };
-
-  const reset = () => {
-    setCurrentFrame(0);
-  };
-
-  //   const getFrame = () => {
-  //     return children.length >= frame ? children[frame] : null;
-  //   };
-  const getFrames = () => {
-    return children.map((child, index) => ({
-      content: child,
-      current: index === currentFrame,
-    }));
-  };
-
-  const playAnimation = () => {
-    animationFrame.current = requestAnimationFrame(onAnimate);
-  };
-
-  const onAnimate = (timestamp: number) => {
-    if (!animationStart.current) {
-      animationStart.current = timestamp;
+  const animatedFrames = frames.map((frame, index) => {
+    if (index <= activeFrame) {
+      return React.cloneElement(frame, {
+        onAnimationEnd: handleAnimationEnd,
+        key: index,
+      });
     }
 
-    const elapsed = timestamp - (animationStart.current || 0);
-    let nextFrame = Math.floor((elapsed / duration) * children.length);
-    if (nextFrame > children.length - 1) {
-      if (onSequenceEnd) {
-        onSequenceEnd();
-      }
+    return null;
+  });
 
-      if (loop) {
-        nextFrame %= children.length;
-        animationStart.current = timestamp;
-      } else {
-        nextFrame = -1;
-      }
-    }
-
-    if (nextFrame > -1) {
-      setCurrentFrame(nextFrame);
-      playAnimation();
-    } else if (onAnimationStop) {
-      onAnimationStop();
-    }
-  };
-
-  useEffect(() => {
-    if (autoplay) {
-      start();
-    }
-
-    return () => {
-      stop();
-    };
-  }, [autoplay]);
-
-  return { frames: getFrames(), reset, stop, start };
-}
+  return animatedFrames;
+};
+export default useSequentialAnimation;
