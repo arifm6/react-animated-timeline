@@ -11,14 +11,15 @@ const useSequentialAnimation = ({ frames }: UseSequentialAnimationProps) => {
     setActiveFrame((prevFrame) => prevFrame + 1);
   };
   const animatedFrames = frames.map((frame, index) => {
-    if (index <= activeFrame) {
-      return React.cloneElement(frame, {
-        onAnimationEnd: handleAnimationEnd,
-        key: index,
-      });
-    }
-
-    return null;
+    const animationPlayState = index <= activeFrame ? "running" : "paused";
+    const onAnimationEnd =
+      index <= activeFrame ? handleAnimationEnd : undefined;
+    const styles = frame.props.style || {};
+    return React.cloneElement(frame, {
+      onAnimationEnd,
+      style: { animationPlayState, ...styles },
+      key: index,
+    });
   });
 
   return animatedFrames;
