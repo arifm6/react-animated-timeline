@@ -33,33 +33,43 @@ export default function TimelineElement({
 }: TimelineElementProps) {
   return inverted ? (
     <div className={styles.container}>
-      <div className={styles.descriptionSectionInverted}>
-        <Details milestone={milestone} />
-        <div className={styles.branch}>
-          <div className={styles.branchPoint}></div>
-          <div className={styles.branchLine}></div>
+      <div className={styles.timelineTrack}></div>
+      <div className={styles.buttonAndDateContainer}>
+        <div className={styles.descriptionSectionInverted}>
+          <div className={styles.branch}>
+            <Details milestone={milestone} />
+
+            <div className={styles.branchPoint}></div>
+
+            <div className={styles.branchLine}></div>
+          </div>
+        </div>
+
+        <ButtonIcon buttonIcon={buttonIcon} />
+        <div>
+          <div className={styles.dateInverted}>{milestone.date}</div>
         </div>
       </div>
-
-      <ButtonIcon />
-      <div>
-        <div className={styles.dateInverted}>{milestone.date}</div>
-      </div>
+      <div className={styles.timelineTrack}></div>
     </div>
   ) : (
     <div className={styles.container}>
-      <div>
-        <div className={styles.date}>{milestone.date}</div>
-      </div>
-      <ButtonIcon buttonIcon={buttonIcon} />
-      <div className={styles.descriptionSection}>
-        <div className={styles.branch}>
-          <div className={styles.branchLine}></div>
-
-          <div className={styles.branchPoint}></div>
+      <div className={styles.timelineTrack}></div>
+      <div className={styles.buttonAndDateContainer}>
+        <div>
+          <div className={styles.date}>{milestone.date}</div>
         </div>
-        <Details milestone={milestone} />
+        <ButtonIcon buttonIcon={buttonIcon} />
+        <div className={styles.descriptionSection}>
+          <div className={styles.branch}>
+            <div className={styles.branchLine}></div>
+
+            <div className={styles.branchPoint}></div>
+          </div>
+          <Details milestone={milestone} />
+        </div>
       </div>
+      <div className={styles.timelineTrack}></div>
     </div>
   );
 }

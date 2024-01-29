@@ -1,8 +1,14 @@
 .container {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+}
+
+.buttonAndDateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 }
 
@@ -25,7 +31,7 @@
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
   white-space: nowrap;
-  transform: translateX(-50%);
+  transform: translateX(-33.3333333%);
   bottom: 100%;
 }
 
@@ -38,7 +44,8 @@
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
   white-space: nowrap;
-  transform: translateX(-50%);
+  transform: translateX(-33.33333333%);
+  left: 0;
   top: 100%;
 }
 
@@ -68,6 +75,12 @@
   font-size: 0.75rem;
   line-height: 1rem;
   color: #343434;
+}
+
+.timelineTrack {
+  height: 1px;
+  flex-grow: 1;
+  background-color: #3d5af1;
 }
 
 @media (min-width: 640px) {
