@@ -110,6 +110,7 @@ export default function Timeline({
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.6 });
   const lineControls = useAnimation();
+  const buttonControls = useAnimation();
   useEffect(() => {
     const startAnimation = async () => {
       lineControls.start({
@@ -125,7 +126,13 @@ export default function Timeline({
       }, animationSpeed * 1000);
     }
   }, [isInView, lineControls, onAnimationComplete]);
-
+  useEffect(() => {
+    console.log("currentFrame", currentFrame);
+    console.log("milestones.length", milestones.length);
+    if (currentFrame >= itemsPerView - 1) {
+      buttonControls.start({ opacity: 1, pointerEvents: "all" });
+    }
+  }, [currentFrame]);
   const timelineElements = milestones.map((milestone, index) => (
     <div
       key={milestone.date + milestone.title}
@@ -150,9 +157,26 @@ export default function Timeline({
       className={styles.timelineContainer}
       style={{ width, height }}
     >
-      <button onClick={handlePrev} className={styles.prevButton}>
-        Prev
-      </button>
+      <motion.button
+        initial={{ opacity: 0, pointerEvents: "none" }}
+        animate={buttonControls}
+        onClick={handlePrev}
+        className={styles.prevButton}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </motion.button>{" "}
       <motion.div
         className={styles.timelineTrack}
         initial={{ width: 0, opacity: 0, flexBasis: 0 }}
@@ -161,9 +185,26 @@ export default function Timeline({
         // style={{ flexBasis: `${100 / itemsPerView / 2}%` }}
       ></motion.div>
       {timelineElements}
-      <button onClick={handleNext} className={styles.nextButton}>
-        Next {currentIndex}
-      </button>
+      <motion.button
+        initial={{ opacity: 0, pointerEvents: "none" }}
+        animate={buttonControls}
+        onClick={handleNext}
+        className={styles.nextButton}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </motion.button>{" "}
     </div>
   );
 }

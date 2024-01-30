@@ -21,13 +21,26 @@
 
 .prevButton {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   bottom: 1/3;
   left: 5%;
-  z-index: 1000;
+  z-index: 9999;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 100%;
 }
 
 .nextButton {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   bottom: 1/3;
   right: 5%;
+  z-index: 9999;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 100%;
 }
