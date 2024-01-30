@@ -143,6 +143,7 @@ export default function Timeline({
         inverted={index % 2 === 1}
         animate={index === currentFrame && isInView}
         onAnimationComplete={onAnimationComplete}
+        animationSpeed={animationSpeed}
       />
     </div>
   ));
