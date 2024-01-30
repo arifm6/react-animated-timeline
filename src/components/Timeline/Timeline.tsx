@@ -165,7 +165,7 @@ export default function Timeline({
         initial={{ opacity: 0, pointerEvents: "none" }}
         animate={buttonControls}
         onClick={handlePrev}
-        className={styles.prevButton}
+        className={`${styles.timelineButton} ${styles.prevButton}`}
         whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
         whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
       >
@@ -199,7 +199,7 @@ export default function Timeline({
         initial={{ opacity: 0, pointerEvents: "none" }}
         animate={buttonControls}
         onClick={handleNext}
-        className={styles.nextButton}
+        className={`${styles.timelineButton} ${styles.nextButton}`}
         whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
         whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
       >
