@@ -1,7 +1,7 @@
 .container {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 }
 
@@ -79,8 +79,11 @@
 
 .timelineTrack {
   height: 1px;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   background-color: #3d5af1;
+  position: absolute;
+  left: 0;
+  z-index: -9999;
 }
 
 @media (min-width: 640px) {

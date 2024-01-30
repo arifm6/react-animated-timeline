@@ -25,6 +25,17 @@ export default function Timeline({
   itemsPerViewBreakpoints,
   animationSpeed = 1,
 }: TimelineProps) {
+  const [currentFrame, setCurrentFrame] = useState(-1);
+  const onAnimationComplete = useCallback(() => {
+    setCurrentFrame((prevFrame) => {
+      const nextFrame = prevFrame + 1;
+      if (nextFrame < milestones.length) {
+        return nextFrame;
+      }
+      return prevFrame;
+    });
+  }, [milestones]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   // add doc to suppress hydration warning on nextjs or about ssr mismatch
   const [itemsPerView, setItemsPerView] = useState(() => {
@@ -42,18 +53,6 @@ export default function Timeline({
       return 1;
     }
   });
-  const timelineElements = milestones.map((milestone, index) => (
-    <div
-      key={milestone.date + milestone.title}
-      className={styles.timelineElement}
-      style={{
-        flexBasis: `${100 / itemsPerView}%`,
-        transform: `translateX(-${currentIndex * 100}%)`,
-      }}
-    >
-      <TimelineElement milestone={milestone} inverted={index % 2 === 1} />
-    </div>
-  ));
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => {
@@ -108,17 +107,6 @@ export default function Timeline({
     };
   }, [itemsPerViewBreakpoints]);
 
-  const [currentFrame, setCurrentFrame] = useState(-1);
-
-  const onAnimationComplete = useCallback(() => {
-    setCurrentFrame((prevFrame) => {
-      const nextFrame = prevFrame + 1;
-      if (nextFrame < milestones.length) {
-        return nextFrame;
-      }
-      return prevFrame;
-    });
-  }, [milestones]);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.6 });
   const lineControls = useAnimation();
@@ -137,6 +125,24 @@ export default function Timeline({
       }, animationSpeed * 1000);
     }
   }, [isInView, lineControls, onAnimationComplete]);
+
+  const timelineElements = milestones.map((milestone, index) => (
+    <div
+      key={milestone.date + milestone.title}
+      className={styles.timelineElement}
+      style={{
+        flexBasis: `${100 / itemsPerView}%`,
+        transform: `translateX(-${currentIndex * 100}%)`,
+      }}
+    >
+      <TimelineElement
+        milestone={milestone}
+        inverted={index % 2 === 1}
+        animate={index === currentFrame && isInView}
+        onAnimationComplete={onAnimationComplete}
+      />
+    </div>
+  ));
 
   return (
     <div
