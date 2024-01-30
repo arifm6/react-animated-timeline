@@ -33,7 +33,7 @@ export default function TimelineElement({
 }: TimelineElementProps) {
   return inverted ? (
     <div className={styles.container}>
-      <div className={styles.timelineTrack}></div>
+      {/* <div className={styles.timelineTrack}></div> */}
       <div className={styles.buttonAndDateContainer}>
         <div className={styles.descriptionSectionInverted}>
           <div className={styles.branch}>
@@ -54,7 +54,7 @@ export default function TimelineElement({
     </div>
   ) : (
     <div className={styles.container}>
-      <div className={styles.timelineTrack}></div>
+      {/* <div className={styles.timelineTrack}></div> */}
       <div className={styles.buttonAndDateContainer}>
         <div>
           <div className={styles.date}>{milestone.date}</div>

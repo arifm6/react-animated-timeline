@@ -110,7 +110,10 @@ export default function Timeline({
       <button onClick={handlePrev} className={styles.prevButton}>
         Prev
       </button>
-      <div className={styles.timelineTrack}></div>
+      <div
+        className={styles.timelineTrack}
+        style={{ flexBasis: `${100 / itemsPerView / 2}%` }}
+      ></div>
       {timelineElements}
       <button onClick={handleNext} className={styles.nextButton}>
         Next {currentIndex}

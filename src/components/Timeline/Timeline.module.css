@@ -8,16 +8,13 @@
 }
 
 .timelineTrack {
-  flex-grow: 1;
   height: 1px;
   background-color: #3d5af1;
-  position: absolute;
-  left: 0;
-  right: 0;
+  flex-grow: 1/2;
+  flex-shrink: 0;
 }
 
 .timelineElement {
-  flex-grow: 1;
   flex-shrink: 0;
   transition: transform 0.5s ease-in-out;
 }
