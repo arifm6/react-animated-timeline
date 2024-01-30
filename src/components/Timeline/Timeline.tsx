@@ -1,8 +1,9 @@
 import styles from "./Timeline.module.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Milestone } from "../../types";
 import { TimelineElement } from "../..";
 import React from "react";
+import { motion, useAnimation, useInView } from "framer-motion";
 
 interface ResponsiveBreakpoint {
   minWidth: number;
@@ -14,6 +15,7 @@ interface TimelineProps {
   itemsPerViewBreakpoints: ResponsiveBreakpoint[];
   width: string;
   height: string;
+  animationSpeed?: number;
 }
 
 export default function Timeline({
@@ -21,6 +23,7 @@ export default function Timeline({
   width,
   height,
   itemsPerViewBreakpoints,
+  animationSpeed = 1,
 }: TimelineProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   // add doc to suppress hydration warning on nextjs or about ssr mismatch
@@ -105,15 +108,52 @@ export default function Timeline({
     };
   }, [itemsPerViewBreakpoints]);
 
+  const [currentFrame, setCurrentFrame] = useState(-1);
+
+  const onAnimationComplete = useCallback(() => {
+    setCurrentFrame((prevFrame) => {
+      const nextFrame = prevFrame + 1;
+      if (nextFrame < milestones.length) {
+        return nextFrame;
+      }
+      return prevFrame;
+    });
+  }, [milestones]);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: false, amount: 0.6 });
+  const lineControls = useAnimation();
+  useEffect(() => {
+    const startAnimation = async () => {
+      lineControls.start({
+        width: "100%",
+        opacity: 1,
+        flexBasis: `${100 / itemsPerView / 2}%`,
+      });
+    };
+    if (isInView) {
+      startAnimation();
+      setTimeout(() => {
+        onAnimationComplete();
+      }, animationSpeed * 1000);
+    }
+  }, [isInView, lineControls, onAnimationComplete]);
+
   return (
-    <div className={styles.timelineContainer} style={{ width, height }}>
+    <div
+      ref={containerRef}
+      className={styles.timelineContainer}
+      style={{ width, height }}
+    >
       <button onClick={handlePrev} className={styles.prevButton}>
         Prev
       </button>
-      <div
+      <motion.div
         className={styles.timelineTrack}
-        style={{ flexBasis: `${100 / itemsPerView / 2}%` }}
-      ></div>
+        initial={{ width: 0, opacity: 0, flexBasis: 0 }}
+        animate={lineControls}
+        transition={{ duration: animationSpeed }}
+        // style={{ flexBasis: `${100 / itemsPerView / 2}%` }}
+      ></motion.div>
       {timelineElements}
       <button onClick={handleNext} className={styles.nextButton}>
         Next {currentIndex}
