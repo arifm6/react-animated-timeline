@@ -114,7 +114,6 @@ export default function Timeline({
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.6 });
   const lineControls = useAnimation();
-  const buttonControls = useAnimation();
   useEffect(() => {
     const startAnimation = async () => {
       lineControls.start({
@@ -130,13 +129,6 @@ export default function Timeline({
       }, animationSpeed * 1000);
     }
   }, [isInView, lineControls, onAnimationComplete]);
-  useEffect(() => {
-    console.log("currentFrame", currentFrame);
-    console.log("milestones.length", milestones.length);
-    if (currentFrame >= itemsPerView - 1) {
-      buttonControls.start({ opacity: 1, pointerEvents: "all" });
-    }
-  }, [currentFrame]);
   const timelineElements = milestones.map((milestone, index) => (
     <div
       key={milestone.date + milestone.title}
@@ -154,6 +146,10 @@ export default function Timeline({
       />
     </div>
   ));
+  const buttonVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
 
   return (
     <div
@@ -162,12 +158,23 @@ export default function Timeline({
       style={{ width, height }}
     >
       <motion.button
-        initial={{ opacity: 0, pointerEvents: "none" }}
-        animate={buttonControls}
+        variants={buttonVariants}
+        initial="hidden"
+        animate={
+          currentIndex > 0 && currentFrame >= itemsPerView - 1
+            ? "visible"
+            : "hidden"
+        }
         onClick={handlePrev}
         className={`${styles.timelineButton} ${styles.prevButton}`}
         whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
         whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
+        style={{
+          pointerEvents:
+            currentIndex > 0 && currentFrame >= itemsPerView - 1
+              ? "all"
+              : "none",
+        }}
       >
         {prevButton ? (
           prevButton
@@ -186,7 +193,7 @@ export default function Timeline({
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         )}
-      </motion.button>{" "}
+      </motion.button>
       <motion.div
         className={styles.timelineTrack}
         initial={{ width: 0, opacity: 0, flexBasis: 0 }}
@@ -196,12 +203,25 @@ export default function Timeline({
       ></motion.div>
       {timelineElements}
       <motion.button
-        initial={{ opacity: 0, pointerEvents: "none" }}
-        animate={buttonControls}
+        variants={buttonVariants}
+        initial="hidden"
+        animate={
+          currentIndex < timelineElements.length - itemsPerView &&
+          currentFrame >= itemsPerView - 1
+            ? "visible"
+            : "hidden"
+        }
         onClick={handleNext}
         className={`${styles.timelineButton} ${styles.nextButton}`}
         whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
         whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
+        style={{
+          pointerEvents:
+            currentIndex < timelineElements.length - itemsPerView &&
+            currentFrame >= itemsPerView - 1
+              ? "all"
+              : "none",
+        }}
       >
         {nextButton ? (
           nextButton
@@ -220,7 +240,7 @@ export default function Timeline({
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         )}
-      </motion.button>{" "}
+      </motion.button>
     </div>
   );
 }
