@@ -16,6 +16,8 @@ interface TimelineProps {
   width: string;
   height: string;
   animationSpeed?: number;
+  prevButton?: React.ReactNode;
+  nextButton?: React.ReactNode;
 }
 
 export default function Timeline({
@@ -24,6 +26,8 @@ export default function Timeline({
   height,
   itemsPerViewBreakpoints,
   animationSpeed = 1,
+  prevButton = null,
+  nextButton = null,
 }: TimelineProps) {
   const [currentFrame, setCurrentFrame] = useState(-1);
   const onAnimationComplete = useCallback(() => {
@@ -162,20 +166,26 @@ export default function Timeline({
         animate={buttonControls}
         onClick={handlePrev}
         className={styles.prevButton}
+        whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
+        whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
+        {prevButton ? (
+          prevButton
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="43"
+            height="43"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        )}
       </motion.button>{" "}
       <motion.div
         className={styles.timelineTrack}
@@ -190,20 +200,26 @@ export default function Timeline({
         animate={buttonControls}
         onClick={handleNext}
         className={styles.nextButton}
+        whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
+        whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
+        {nextButton ? (
+          nextButton
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="43"
+            height="43"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        )}
       </motion.button>{" "}
     </div>
   );
