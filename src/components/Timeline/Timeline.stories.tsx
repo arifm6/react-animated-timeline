@@ -36,14 +36,15 @@ const timelineData: Milestone[] = [
     description: "This is the fourth milestone",
   },
 ];
+const itemsPerViewBreakpoints = [
+  { minWidth: 0, itemsPerView: 1 },
+  { minWidth: 500, itemsPerView: 2 },
+  { minWidth: 900, itemsPerView: 3 },
+];
 export const Primary: Story = {
   args: {
     milestones: timelineData,
-    itemsPerViewBreakpoints: [
-      { minWidth: 0, itemsPerView: 1 },
-      { minWidth: 500, itemsPerView: 2 },
-      { minWidth: 900, itemsPerView: 3 },
-    ],
+    itemsPerViewBreakpoints,
     // label: "Primary 😃",
     // size: "large",
     // type: "primary",
