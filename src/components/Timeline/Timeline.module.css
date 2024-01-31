@@ -1,4 +1,5 @@
 .timelineContainer {
+  position: relative;
   display: flex;
   align-items: center;
   position: relative;
@@ -20,7 +21,7 @@
 }
 
 .timelineButton {
-  position: fixed;
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
