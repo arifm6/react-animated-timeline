@@ -1,9 +1,10 @@
 import styles from "./Timeline.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Milestone } from "../../types";
-import { TimelineElement } from "../..";
+
 import React from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
+import TimelineElement from "../TimelineElement/TimelineElement";
 
 interface ResponsiveBreakpoint {
   minWidth: number;
