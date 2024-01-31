@@ -13,8 +13,8 @@ interface ResponsiveBreakpoint {
 interface TimelineProps {
   milestones: Milestone[];
   itemsPerViewBreakpoints: ResponsiveBreakpoint[];
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
   animationSpeed?: number;
   prevButton?: React.ReactNode;
   nextButton?: React.ReactNode;
