@@ -23,8 +23,8 @@ interface TimelineProps {
 
 export default function Timeline({
   milestones,
-  width,
-  height,
+  width = "100%",
+  height = "100%",
   itemsPerViewBreakpoints,
   animationSpeed = 1,
   prevButton = null,
