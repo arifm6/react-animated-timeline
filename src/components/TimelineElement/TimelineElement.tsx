@@ -1,43 +1,35 @@
-import React, { useEffect } from "react";
-import { Milestone } from "../../types";
+import React, { useContext, useEffect } from "react";
 import styles from "./TimelineElement.module.css";
 import ButtonIcon from "./ButtonIcon/ButtonIcon";
 import Details from "./Details/Details";
 import { motion, useAnimation } from "framer-motion";
+import { Milestone } from "../../types";
+import { TimelineContext } from "../Timeline/Timeline";
 
-interface BaseProps {
+export interface TimelineElementProps {
   milestone: Milestone;
-  timelineTrackClassName?: string;
-  dateClassName?: string;
   inverted?: boolean;
-  buttonIcon?: React.ReactNode;
   animate: boolean;
   onAnimationComplete: () => void;
   animationSpeed?: number;
 }
 
-interface buttonIconProps extends BaseProps {
-  buttonIcon: React.ReactNode;
-  timelineButtonParentClassName?: never;
-  timelineButtonChildClassName?: never;
-}
-
-interface timelineButtonClassNameProps extends BaseProps {
-  buttonIcon?: never;
-  timelineButtonParentClassName?: string;
-  timelineButtonChildClassName?: string;
-}
-
-type TimelineElementProps = buttonIconProps | timelineButtonClassNameProps;
-
 export default function TimelineElement({
   milestone,
-  buttonIcon = null,
   inverted = false,
   animate,
   onAnimationComplete,
   animationSpeed = 1,
 }: TimelineElementProps) {
+  const context = useContext(TimelineContext);
+
+  const {
+    dateClass,
+    trackClass,
+    branchContainerClass,
+    branchLineClass,
+    branchPointClass,
+  } = context; // Pull out specific data
   const leftLineControls = useAnimation();
   const dateAndButtonControls = useAnimation();
   const milestoneDescriptionControls = useAnimation();
@@ -99,25 +91,27 @@ export default function TimelineElement({
           transition={{ duration: animationSpeed }}
           className={styles.descriptionSectionInverted}
         >
-          <div className={styles.branch}>
+          <div className={`${styles.branch} ${branchContainerClass}`}>
             <Details milestone={milestone} />
 
-            <div className={styles.branchPoint}></div>
+            <div className={`${styles.branchPoint} ${branchPointClass}`}></div>
 
-            <div className={styles.branchLine}></div>
+            <div className={`${styles.branchLine} ${branchLineClass}`}></div>
           </div>
         </motion.div>
 
-        <ButtonIcon buttonIcon={buttonIcon} />
+        <ButtonIcon />
         <div>
-          <div className={styles.dateInverted}>{milestone.date}</div>
+          <div className={`${styles.dateInverted} ${dateClass}`}>
+            {milestone.date}
+          </div>
         </div>
       </motion.div>
       <motion.div
         initial={{ width: 0, opacity: 0 }}
         animate={rightLineControls}
         transition={{ duration: animationSpeed }}
-        className={styles.timelineTrack}
+        className={`${styles.timelineTrack} ${trackClass} `}
       ></motion.div>
     </div>
   ) : (
@@ -130,9 +124,9 @@ export default function TimelineElement({
         transition={{ duration: animationSpeed }}
       >
         <div>
-          <div className={styles.date}>{milestone.date}</div>
+          <div className={`${styles.date} ${dateClass}`}>{milestone.date}</div>
         </div>
-        <ButtonIcon buttonIcon={buttonIcon} />
+        <ButtonIcon />
         <motion.div
           initial="hidden"
           animate={milestoneDescriptionControls}
@@ -149,10 +143,10 @@ export default function TimelineElement({
           transition={{ duration: animationSpeed }}
           className={styles.descriptionSection}
         >
-          <div className={styles.branch}>
-            <div className={styles.branchLine}></div>
+          <div className={`${styles.branch} ${branchContainerClass}`}>
+            <div className={`${styles.branchLine} ${branchLineClass}`}></div>
 
-            <div className={styles.branchPoint}></div>
+            <div className={`${styles.branchPoint} ${branchPointClass}`}></div>
           </div>
           <Details milestone={milestone} />
         </motion.div>
@@ -161,7 +155,7 @@ export default function TimelineElement({
         initial={{ width: 0, opacity: 0 }}
         animate={rightLineControls}
         transition={{ duration: animationSpeed }}
-        className={styles.timelineTrack}
+        className={`${styles.timelineTrack} ${trackClass}`}
       ></motion.div>
     </div>
   );

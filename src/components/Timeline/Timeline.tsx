@@ -14,17 +14,53 @@ interface ResponsiveBreakpoint {
 interface TimelineProps {
   milestones: Milestone[];
   itemsPerViewBreakpoints: ResponsiveBreakpoint[];
-  width?: string;
-  height?: string;
+  containerClass?: string;
+  dateClass?: string;
+  trackClass?: string;
+  buttonIcon?: React.ReactNode;
+  detailsTitleClass?: string;
+  detailsDescriptionClass?: string;
+  branchContainerClass?: string;
+  branchLineClass?: string;
+  branchPointClass?: string;
   animationSpeed?: number;
   prevButton?: React.ReactNode;
   nextButton?: React.ReactNode;
 }
 
+type TimelineContextType = {
+  dateClass: string;
+  trackClass: string;
+  buttonIcon: React.ReactNode;
+  detailsTitleClass: string;
+  detailsDescriptionClass: string;
+  branchContainerClass: string;
+  branchLineClass: string;
+  branchPointClass: string;
+};
+
+export const TimelineContext = React.createContext<TimelineContextType>({
+  dateClass: "",
+  trackClass: "z",
+  buttonIcon: null,
+  detailsTitleClass: "",
+  detailsDescriptionClass: "",
+  branchContainerClass: "",
+  branchLineClass: "",
+  branchPointClass: "",
+});
 export default function Timeline({
   milestones,
-  width = "100%",
-  height = "100%",
+  containerClass = "",
+  dateClass = "",
+  trackClass = "",
+  buttonIcon = null,
+  branchContainerClass = "",
+  branchLineClass = "",
+  branchPointClass = "",
+  detailsTitleClass = "",
+  detailsDescriptionClass = "",
+
   itemsPerViewBreakpoints,
   animationSpeed = 1,
   prevButton = null,
@@ -154,95 +190,107 @@ export default function Timeline({
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={styles.timelineContainer}
-      style={{ width, height }}
+    <TimelineContext.Provider
+      value={{
+        dateClass,
+        trackClass,
+        buttonIcon,
+        detailsTitleClass,
+        detailsDescriptionClass,
+        branchContainerClass,
+        branchLineClass,
+        branchPointClass,
+      }}
     >
-      <motion.button
-        variants={buttonVariants}
-        initial="hidden"
-        animate={
-          currentIndex > 0 && currentFrame >= itemsPerView - 1
-            ? "visible"
-            : "hidden"
-        }
-        onClick={handlePrev}
-        className={`${styles.timelineButton} ${styles.prevButton}`}
-        whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
-        whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
-        style={{
-          pointerEvents:
-            currentIndex > 0 && currentFrame >= itemsPerView - 1
-              ? "all"
-              : "none",
-        }}
+      <div
+        ref={containerRef}
+        className={`${styles.timelineContainer} ${containerClass}`}
       >
-        {prevButton ? (
-          prevButton
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="43"
-            height="43"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        )}
-      </motion.button>
-      <motion.div
-        className={styles.timelineTrack}
-        initial={{ width: 0, opacity: 0, flexBasis: 0 }}
-        animate={lineControls}
-        transition={{ duration: animationSpeed }}
-        // style={{ flexBasis: `${100 / itemsPerView / 2}%` }}
-      ></motion.div>
-      {timelineElements}
-      <motion.button
-        variants={buttonVariants}
-        initial="hidden"
-        animate={
-          currentIndex < timelineElements.length - itemsPerView &&
-          currentFrame >= itemsPerView - 1
-            ? "visible"
-            : "hidden"
-        }
-        onClick={handleNext}
-        className={`${styles.timelineButton} ${styles.nextButton}`}
-        whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
-        whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
-        style={{
-          pointerEvents:
+        <motion.button
+          variants={buttonVariants}
+          initial="hidden"
+          animate={
+            currentIndex > 0 && currentFrame >= itemsPerView - 1
+              ? "visible"
+              : "hidden"
+          }
+          onClick={handlePrev}
+          className={`${styles.timelineButton} ${styles.prevButton}`}
+          whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
+          whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
+          style={{
+            pointerEvents:
+              currentIndex > 0 && currentFrame >= itemsPerView - 1
+                ? "all"
+                : "none",
+          }}
+        >
+          {prevButton ? (
+            prevButton
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="43"
+              height="43"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          )}
+        </motion.button>
+        <motion.div
+          className={styles.timelineTrack}
+          initial={{ width: 0, opacity: 0, flexBasis: 0 }}
+          animate={lineControls}
+          transition={{ duration: animationSpeed }}
+          // style={{ flexBasis: `${100 / itemsPerView / 2}%` }}
+        ></motion.div>
+        {timelineElements}
+        <motion.button
+          variants={buttonVariants}
+          initial="hidden"
+          animate={
             currentIndex < timelineElements.length - itemsPerView &&
             currentFrame >= itemsPerView - 1
-              ? "all"
-              : "none",
-        }}
-      >
-        {nextButton ? (
-          nextButton
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="43"
-            height="43"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        )}
-      </motion.button>
-    </div>
+              ? "visible"
+              : "hidden"
+          }
+          onClick={handleNext}
+          className={`${styles.timelineButton} ${styles.nextButton}`}
+          whileHover={{ scale: 1.05 }} // slightly enlarge the button when hovered
+          whileTap={{ scale: 0.95 }} // slightly shrink the button when clicked
+          style={{
+            pointerEvents:
+              currentIndex < timelineElements.length - itemsPerView &&
+              currentFrame >= itemsPerView - 1
+                ? "all"
+                : "none",
+          }}
+        >
+          {nextButton ? (
+            nextButton
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="43"
+              height="43"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          )}
+        </motion.button>
+      </div>
+    </TimelineContext.Provider>
   );
 }
