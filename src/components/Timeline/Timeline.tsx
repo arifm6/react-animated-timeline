@@ -5,6 +5,7 @@ import { Milestone } from "../../types";
 import React from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import TimelineElement from "../TimelineElement/TimelineElement";
+import { TimelineContext } from "./TimelineContext";
 
 interface ResponsiveBreakpoint {
   minWidth: number;
@@ -28,27 +29,6 @@ interface TimelineProps {
   nextButton?: React.ReactNode;
 }
 
-type TimelineContextType = {
-  dateClass: string;
-  trackClass: string;
-  buttonIcon: React.ReactNode;
-  detailsTitleClass: string;
-  detailsDescriptionClass: string;
-  branchContainerClass: string;
-  branchLineClass: string;
-  branchPointClass: string;
-};
-
-export const TimelineContext = React.createContext<TimelineContextType>({
-  dateClass: "",
-  trackClass: "z",
-  buttonIcon: null,
-  detailsTitleClass: "",
-  detailsDescriptionClass: "",
-  branchContainerClass: "",
-  branchLineClass: "",
-  branchPointClass: "",
-});
 export default function Timeline({
   milestones,
   containerClass = "",

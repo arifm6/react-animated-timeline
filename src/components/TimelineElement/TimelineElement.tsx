@@ -4,7 +4,7 @@ import ButtonIcon from "./ButtonIcon/ButtonIcon";
 import Details from "./Details/Details";
 import { motion, useAnimation } from "framer-motion";
 import { Milestone } from "../../types";
-import { TimelineContext } from "../Timeline/Timeline";
+import { TimelineContext } from "../Timeline/TimelineContext";
 
 export interface TimelineElementProps {
   milestone: Milestone;

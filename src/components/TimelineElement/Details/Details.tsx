@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import styles from "./Details.module.css";
 import { Milestone } from "../../../types";
-import { TimelineContext } from "../../Timeline/Timeline";
+import { TimelineContext } from "../../Timeline/TimelineContext";
 interface DetailsProps {
   milestone: Milestone;
 }
