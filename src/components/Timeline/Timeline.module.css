@@ -11,7 +11,7 @@
 .timelineTrack {
   height: 1px;
   background-color: #3d5af1;
-  flex-grow: 1/2;
+
   flex-shrink: 0;
 }
 
